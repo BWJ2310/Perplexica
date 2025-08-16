@@ -1,0 +1,74 @@
+# Finance-focused engine configuration for SearXNG
+# This file contains additional configurations to prioritize financial content
+
+# Priority financial domains to boost in search results
+finance_domains:
+  tier1:  # Major financial news and data providers
+    - reuters.com
+    - bloomberg.com
+    - wsj.com
+    - ft.com
+    - finance.yahoo.com
+    - marketwatch.com
+    - cnbc.com
+    - barrons.com
+    
+  tier2:  # Analysis and research platforms
+    - seekingalpha.com
+    - fool.com
+    - morningstar.com
+    - investopedia.com
+    - zacks.com
+    - tipranks.com
+    - benzinga.com
+    
+  tier3:  # Government and regulatory
+    - sec.gov
+    - federalreserve.gov
+    - treasury.gov
+    - cftc.gov
+    - finra.org
+    
+  tier4:  # Cryptocurrency and fintech
+    - coindesk.com
+    - cointelegraph.com
+    - coinbase.com
+    - cryptocompare.com
+    
+  tier5:  # Social finance sentiment
+    - reddit.com/r/wallstreetbets
+    - reddit.com/r/investing
+    - reddit.com/r/stocks
+    - reddit.com/r/SecurityAnalysis
+    - stocktwits.com
+
+# Search query enhancements for financial terms
+query_enhancements:
+  stock_tickers:
+    - "stock price"
+    - "earnings"
+    - "financial statements"
+    - "investor relations"
+    
+  market_analysis:
+    - "market analysis"
+    - "technical analysis"
+    - "fundamental analysis"
+    - "market sentiment"
+    
+  economic_data:
+    - "economic indicators"
+    - "GDP"
+    - "inflation"
+    - "interest rates"
+    - "fed policy"
+
+# Preferred search result types for finance
+preferred_content_types:
+  - earnings_reports
+  - sec_filings
+  - analyst_reports
+  - market_news
+  - economic_data
+  - price_charts
+  - financial_ratios
