@@ -61,6 +61,12 @@ export const searchSearxng = async (
   // Optimize query for finance content
   const optimizedQuery = optimizeQueryForFinance(query, opts?.engines);
 
+  // Prevent empty queries which cause 400 errors
+  if (!optimizedQuery || optimizedQuery.trim() === '') {
+    console.warn('Empty query detected, skipping SearXNG search');
+    return { results: [], suggestions: [] };
+  }
+
   const url = new URL(`${searxngURL}/search?format=json`);
   url.searchParams.append('q', optimizedQuery);
 

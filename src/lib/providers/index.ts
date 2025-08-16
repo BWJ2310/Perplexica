@@ -115,18 +115,19 @@ export const getAvailableChatModelProviders = async () => {
   models['custom_openai'] = {
     ...(customOpenAiApiKey && customOpenAiApiUrl && customOpenAiModelName
       ? {
-          [customOpenAiModelName]: {
-            displayName: customOpenAiModelName,
-            model: new ChatOpenAI({
-              apiKey: customOpenAiApiKey,
-              modelName: customOpenAiModelName,
-              temperature: 0.7,
-              configuration: {
-                baseURL: customOpenAiApiUrl,
-              },
-            }) as unknown as BaseChatModel,
-          },
-        }
+        [customOpenAiModelName]: {
+          displayName: customOpenAiModelName,
+          model: new ChatOpenAI({
+            apiKey: customOpenAiApiKey,
+            modelName: customOpenAiModelName,
+            temperature: 0.7,
+            maxTokens: 10000,
+            configuration: {
+              baseURL: customOpenAiApiUrl,
+            },
+          }) as unknown as BaseChatModel,
+        },
+      }
       : {}),
   };
 

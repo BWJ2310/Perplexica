@@ -36,7 +36,7 @@ search:
   # Existing autocomplete backends: "360search", "baidu", "brave", "dbpedia", "duckduckgo", "google", "yandex",
   # "mwmbl", "naver", "seznam", "sogou", "startpage", "stract", "swisscows", "quark", "qwant", "wikipedia" -
   # leave blank to turn it off by default.
-  autocomplete: 'google'  # Google autocomplete for better financial term suggestions
+  autocomplete: 'google' # Google autocomplete for better financial term suggestions
   # minimun characters to type before autocompleter starts
   autocomplete_min: 3
   # backend for the favicon near URL in search results.
@@ -44,7 +44,7 @@ search:
   favicon_resolver: ''
   # Default search language - leave blank to detect from browser information or
   # use codes from 'languages.py'
-  default_lang: 'en'  # English for financial terms
+  default_lang: 'en' # English for financial terms
   # max_page: 0  # if engine supports paging, 0 means unlimited numbers of pages
   # Available languages
   # languages:
@@ -249,18 +249,78 @@ plugins:
 # Configuration of the "Hostnames plugin" - Prioritize financial sites:
 hostnames:
   high_priority:
+    # Major Financial News
     - '(.*\.)?reuters.com$'
     - '(.*\.)?bloomberg.com$'
     - '(.*\.)?wsj.com$'
     - '(.*\.)?ft.com$'
+    - '(.*\.)?economist.com$'
     - '(.*\.)?marketwatch.com$'
-    - '(.*\.)?finance.yahoo.com$'
+    - '(.*\.)?barrons.com$'
+    - '(.*\.)?cnbc.com$'
+    - '(.*\.)?businessinsider.com$'
+    - '(.*\.)?gfmag.com$'
+    
+    # Investment Research & Analysis
     - '(.*\.)?seekingalpha.com$'
     - '(.*\.)?fool.com$'
-    - '(.*\.)?cnbc.com$'
+    - '(.*\.)?morningstar.com$'
+    - '(.*\.)?investing.com$'
+    - '(.*\.)?benzinga.com$'
+    - '(.*\.)?finance.yahoo.com$'
+    - '(.*\.)?zacks.com$'
+    - '(.*\.)?thestreet.com$'
+    - '(.*\.)?simplywall.st$'
+    
+    # Financial Data & Screening
+    - '(.*\.)?finviz.com$'
+    - '(.*\.)?stockrow.com$'
+    - '(.*\.)?macrotrends.net$'
+    - '(.*\.)?stockanalysis.com$'
+    - '(.*\.)?gurufocus.com$'
+    
+    # Global/Regional Sources
+    - '(.*\.)?asia.nikkei.com$'
+    - '(.*\.)?scmp.com$'
+    - '(.*\.)?economictimes.com$'
+    - '(.*\.)?business-standard.com$'
+    - '(.*\.)?bnnbloomberg.ca$'
+    - '(.*\.)?afr.com$'
+    
+    # Regulatory & Official
     - '(.*\.)?sec.gov$'
     - '(.*\.)?investopedia.com$'
-    - '(.*\.)?morningstar.com$'
+    
+    # Crypto/Tech Finance
+    - '(.*\.)?coindesk.com$'
+    - '(.*\.)?cointelegraph.com$'
+    
+    # Social Media & Forums
+    - '(.*\.)?reddit.com$'
+    - '(.*\.)?stocktwits.com$'
+    - '(.*\.)?twitter.com$'
+    - '(.*\.)?x.com$'
+    - '(.*\.)?youtube.com$'
+    - '(.*\.)?elitetrader.com$'
+    - '(.*\.)?trade2win.com$'
+    - '(.*\.)?investorshub.com$'
+    - '(.*\.)?hotcopper.com.au$'
+    - '(.*\.)?wallstreetoasis.com$'
+    - '(.*\.)?bogleheads.org$'
+    
+    # Content & Blog Platforms
+    - '(.*\.)?medium.com$'
+    - '(.*\.)?substack.com$'
+    - '(.*\.)?quora.com$'
+    - '(.*\.)?linkedin.com$'
+    - '(.*\.)?news.ycombinator.com$'
+    
+    # International Social Platforms
+    - '(.*\.)?zhihu.com$'
+    - '(.*\.)?xueqiu.com$'
+    - '(.*\.)?cafef.vn$'
+    - '(.*\.)?moneycontrol.com$'
+    - '(.*\.)?teamblind.com$'
   low_priority:
     - '(.*\.)?pinterest.com$'
     - '(.*\.)?instagram.com$'
@@ -818,7 +878,7 @@ engines:
   - name: duckduckgo
     engine: duckduckgo
     shortcut: ddg
-    disabled: true  # Disable general search engines in favor of finance-focused ones
+    disabled: true # Disable general search engines in favor of finance-focused ones
 
   - name: duckduckgo images
     engine: duckduckgo_extra
@@ -1038,7 +1098,7 @@ engines:
   - name: google scholar
     engine: google_scholar
     shortcut: gos
-    weight: 1.1  # Can be useful for financial research papers
+    weight: 1.1 # Can be useful for financial research papers
     disabled: false
 
   - name: google play apps
@@ -1296,15 +1356,15 @@ engines:
     mastodon_type: accounts
     base_url: https://mastodon.social
     shortcut: mau
-    disabled: true  # Less relevant for finance
+    disabled: true # Less relevant for finance
 
   - name: mastodon hashtags
     engine: mastodon
     mastodon_type: hashtags
     base_url: https://mastodon.social
     shortcut: mah
-    weight: 0.7  # Can find finance discussions with hashtags
-    disabled: false  # Enable for #stocks #trading #investing hashtags
+    weight: 0.7 # Can find finance discussions with hashtags
+    disabled: false # Enable for #stocks #trading #investing hashtags
 
   # - name: matrixrooms
   #   engine: mrs
@@ -1598,7 +1658,7 @@ engines:
     # country
     url: https://thepiratebay.org/
     timeout: 3.0
-    disabled: true  # Not relevant for finance
+    disabled: true # Not relevant for finance
 
   - name: pixabay images
     engine: pixabay
@@ -1740,7 +1800,7 @@ engines:
     engine: qwant
     shortcut: qw
     categories: [general, web]
-    disabled: true  # Keep disabled
+    disabled: true # Keep disabled
     additional_tests:
       rosebud: *test_rosebud
 
@@ -1795,8 +1855,8 @@ engines:
     engine: reddit
     shortcut: re
     page_size: 25
-    disabled: false  # Enabled for finance subreddits
-    weight: 1.0  # Good for market sentiment and retail investor discussions
+    disabled: false # Enabled for finance subreddits
+    weight: 1.0 # Good for market sentiment and retail investor discussions
     # Will search r/wallstreetbets, r/investing, r/stocks, r/StockMarket, r/SecurityAnalysis
 
   - name: reuters
@@ -1894,7 +1954,7 @@ engines:
   - name: soundcloud
     engine: soundcloud
     shortcut: sc
-    disabled: true  # Music, not finance
+    disabled: true # Music, not finance
 
   - name: stackoverflow
     engine: stackexchange
@@ -1985,7 +2045,7 @@ engines:
     shortcut: sp
     startpage_categ: web
     categories: [general, web]
-    disabled: true  # Disable in favor of finance-focused engines
+    disabled: true # Disable in favor of finance-focused engines
     additional_tests:
       rosebud: *test_rosebud
 
@@ -2158,8 +2218,8 @@ engines:
     #
     # Or you can use the html non-stable engine, activated by default
     engine: youtube_noapi
-    disabled: false  # Enabled for finance education and market analysis videos
-    weight: 0.9  # Good for educational content and market analysis
+    disabled: false # Enabled for finance education and market analysis videos
+    weight: 0.9 # Good for educational content and market analysis
     categories: [videos, general]
     # Will find content from finance YouTubers, market analysis, tutorials
 
@@ -2632,7 +2692,7 @@ engines:
     paging: true
     categories: [general, web]
     brave_category: search
-    weight: 1.3  # Increase weight for financial searches
+    weight: 1.3 # Increase weight for financial searches
     disabled: false
 
   - name: brave.images

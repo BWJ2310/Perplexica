@@ -1,10 +1,7 @@
-import prompts from '@/lib/prompts';
-import MetaSearchAgent from '@/lib/search/metaSearchAgent';
 import crypto from 'crypto';
 import { AIMessage, BaseMessage, HumanMessage } from '@langchain/core/messages';
 import { EventEmitter } from 'stream';
 import {
-  chatModelProviders,
   getAvailableChatModelProviders,
   getAvailableEmbeddingModelProviders,
 } from '@/lib/providers';
@@ -20,29 +17,6 @@ import { createCustomModel, validateCustomModel } from '@/lib/providers/customMo
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// Helper function to extract ticker from message
-function extractTicker(message: string): string | null {
-  // Common stock ticker patterns
-  const patterns = [
-    /\b([A-Z]{1,5})\b(?:\s+(?:stock|ticker|price|technical|analysis|indicators?))?/i,
-    /\$([A-Z]{1,5})\b/,
-    /ticker[:\s]+([A-Z]{1,5})\b/i,
-  ];
-  
-  for (const pattern of patterns) {
-    const match = message.match(pattern);
-    if (match && match[1]) {
-      // Validate it looks like a ticker (1-5 uppercase letters)
-      const ticker = match[1].toUpperCase();
-      if (/^[A-Z]{1,5}$/.test(ticker)) {
-        return ticker;
-      }
-    }
-  }
-  
-  return null;
-}
-
 type Message = {
   messageId: string;
   chatId: string;
@@ -56,14 +30,6 @@ type ChatModel = {
   baseUrl?: string;
 };
 
-type AlpacaConfig = {
-  apiKey: string;
-  apiSecret: string;
-  ticker?: string;
-  timeframe?: '1D' | '1W' | '1M' | '3M' | '6M' | '1Y';
-  paper?: boolean;
-};
-
 type Body = {
   message: Message;
   optimizationMode: 'speed' | 'balanced' | 'quality';
@@ -72,7 +38,7 @@ type Body = {
   files: Array<string>;
   chatModel: ChatModel;
   systemInstructions: string;
-  alpacaConfig?: AlpacaConfig; // Optional Alpaca configuration for market data
+  maxSources?: number;
 };
 
 const handleEmitterEvents = async (
@@ -300,62 +266,6 @@ export const POST = async (req: Request) => {
       }
     }
 
-    // If market data mode with Alpaca config, enrich system instructions with data
-    let enrichedSystemInstructions = body.systemInstructions || '';
-    
-    if (body.focusMode === 'marketData' && body.alpacaConfig?.apiKey && body.alpacaConfig?.apiSecret) {
-      try {
-        const { AlpacaMarketData, TechnicalAnalysis } = await import('@/lib/financial/alpacaClient');
-        const alpaca = new AlpacaMarketData(body.alpacaConfig);
-        
-        // Extract ticker from message or use provided ticker
-        const ticker = body.alpacaConfig.ticker || extractTicker(message.content);
-        const timeframe = body.alpacaConfig.timeframe || '1M';
-        
-        if (ticker) {
-          // Fetch historical data and calculate indicators
-          const historicalData = await alpaca.getHistoricalData(ticker, timeframe);
-          const indicators = TechnicalAnalysis.calculateIndicators(historicalData);
-          const quote = await alpaca.getLatestQuote(ticker);
-          
-          // Add the calculated data to system instructions
-          enrichedSystemInstructions = `
-${body.systemInstructions || ''}
-
-## ALPACA MARKET DATA AVAILABLE:
-Ticker: ${ticker}
-Timeframe: ${timeframe}
-Data Points: ${historicalData.length}
-
-### Current Market Data:
-- Price: $${indicators.current_price?.toFixed(2)}
-- Change: ${indicators.price_change_percent?.toFixed(2)}%
-- Bid/Ask: $${quote?.bid?.toFixed(2)}/$${quote?.ask?.toFixed(2)}
-
-### Technical Indicators (Calculated):
-- RSI(14): ${indicators.rsi_14?.toFixed(2)}
-- MACD: ${indicators.macd?.macd_line?.toFixed(3)}
-- SMA(20): $${indicators.sma_20?.toFixed(2)}
-- SMA(50): $${indicators.sma_50?.toFixed(2)}
-- Bollinger Bands: Upper: $${indicators.bollinger_bands?.upper?.toFixed(2)}, Lower: $${indicators.bollinger_bands?.lower?.toFixed(2)}
-- ATR(14): ${indicators.atr_14?.toFixed(2)}
-- Volume Ratio: ${indicators.volume_ratio?.toFixed(2)}x average
-- Stochastic: K: ${indicators.stochastic?.k?.toFixed(2)}, D: ${indicators.stochastic?.d?.toFixed(2)}
-
-### Support/Resistance:
-- Support Levels: ${indicators.support_levels?.map(l => `$${l.toFixed(2)}`).join(', ')}
-- Resistance Levels: ${indicators.resistance_levels?.map(l => `$${l.toFixed(2)}`).join(', ')}
-- Pivot Points: R1: $${indicators.pivot_point?.r1?.toFixed(2)}, S1: $${indicators.pivot_point?.s1?.toFixed(2)}
-
-Note: This is real calculated data from Alpaca Markets API, not web search results.
-Present this data in your response along with any additional web search findings.`;
-        }
-      } catch (error) {
-        console.error('Failed to fetch Alpaca data:', error);
-        // Continue without Alpaca data if it fails
-      }
-    }
-    
     const stream = await handler.searchAndAnswer(
       message.content,
       history,
@@ -363,7 +273,8 @@ Present this data in your response along with any additional web search findings
       embeddings,
       body.optimizationMode,
       body.files,
-      enrichedSystemInstructions,
+      body.systemInstructions || '',
+      body.maxSources,
     );
 
     const responseStream = new TransformStream();

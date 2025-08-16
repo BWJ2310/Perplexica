@@ -3,6 +3,17 @@ You will be given a conversation below and a follow up question. You need to rep
 If it is a writing task or a simple hi, hello rather than a question, you need to return \`not_needed\` as the response.
 Focus on extracting ticker symbols and adding social media terms like "Reddit", "Twitter", "TikTok", "YouTube", "Instagram", "Threads", "Discord", "StockTwits", "WallStreetBets", "FinTok", "retail sentiment", "social media buzz", "trending" when relevant.
 
+For comprehensive social sentiment, search these platforms:
+- Reddit communities: site:reddit.com (r/wallstreetbets OR r/stocks OR r/investing OR r/pennystocks OR r/thetagang OR r/options)
+- Twitter/X Finance: site:twitter.com OR site:x.com $ticker OR #stocks
+- StockTwits: site:stocktwits.com
+- YouTube Finance: site:youtube.com stock market analysis
+- TikTok FinTok: tiktok finance investing stocks
+- Trading forums: site:elitetrader.com OR site:trade2win.com OR site:investorshub.com OR site:hotcopper.com.au
+- Content platforms: site:seekingalpha.com/instablog OR site:medium.com investing OR site:substack.com finance
+- International forums: site:zhihu.com 股票 OR site:xueqiu.com OR site:cafef.vn OR site:moneycontrol.com/forums
+- Professional networks: site:linkedin.com/pulse finance OR site:glassdoor.com stocks
+
 Example:
 1. Follow up question: What's Reddit saying about GME?
 Rephrased: GME GameStop Reddit WallStreetBets sentiment discussion retail investors social media
@@ -48,12 +59,26 @@ export const financeSocialResponsePrompt = `
     - **StockTwits**: Real-time sentiment, bullish/bearish indicators
     - **Discord**: Trading servers, private groups, options flow discussions
 
+    **Content & Blog Platforms:**
+    - **Seeking Alpha Comments**: User discussions on articles, Instablog posts, community sentiment
+    - **Medium**: Finance publications, personal investing stories, crypto analysis
+    - **Substack**: Independent finance newsletters, paid subscriber communities
+    - **Quora**: Investment Q&A, retail investor questions and concerns
+    - **Hacker News**: Tech stock discussions, IPO analysis, startup valuations
+
+    **International Platforms:**
+    - **Zhihu (知乎)**: Chinese Quora-equivalent, A-shares and US-listed Chinese stocks
+    - **Xueqiu (雪球)**: Chinese investment social network, professional analysis
+    - **CafeF**: Vietnamese market discussions
+    - **MoneyControl Forums**: Indian market sentiment
+    - **HC (HotCopper)**: Australian ASX discussions
+
     **New Generation Platforms:**
     - **TikTok (FinTok)**: Young investor trends, viral stock tips, educational content
     - **YouTube**: Stock analysis channels, day trading streams, market commentary
-    - **Instagram**: Finance influencers, trading screenshots, success stories
-    - **Threads**: Meta's Twitter alternative, growing finance community
-    - **LinkedIn**: Professional investor insights, company news, executive moves
+    - **Instagram/Threads**: Finance influencers, trading screenshots, Meta's ecosystem
+    - **LinkedIn Pulse**: Professional investor insights, company news, executive moves
+    - **Telegram Groups**: Crypto and stock trading signals, pump groups
 
     **Platform Demographics & Characteristics:**
     - **TikTok**: Gen Z investors (18-25), viral trends, simplified explanations, FOMO-driven
@@ -95,6 +120,8 @@ export const financeSocialResponsePrompt = `
     - **Volume Indicators**: Show mention counts and % changes
     - **Time Context**: Include when discussions peaked or started
     - **Notable Posts**: Quote highly upvoted/retweeted content
+    - **COMPREHENSIVE COVERAGE**: Include EVERY relevant social media post, comment, and discussion found. Don't summarize - present ALL social sentiment data exhaustively. Include full quotes, complete threads, and all available metrics (likes, shares, comments, awards).
+    - **DETAILED ANALYSIS**: Provide extensive interpretation of social sentiment patterns, user demographics, posting frequency trends, and community dynamics. Analyze language patterns, emotional indicators, and collective behavior in depth.
 
     ### Community Language Guide
     - Translate common terms: "Tendies" (profits), "Gay bears" (bearish traders), "BTD" (buy the dip)

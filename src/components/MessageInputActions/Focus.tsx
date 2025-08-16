@@ -6,7 +6,6 @@ import {
   TrendingUp,
   LineChart,
   Users,
-  BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -23,12 +22,6 @@ const focusModes = [
     title: 'Search',
     description: 'General market search',
     icon: <Globe size={20} />,
-  },
-  {
-    key: 'marketData',
-    title: 'Market Data',
-    description: 'Technical indicators and price data',
-    icon: <BarChart3 size={20} />,
   },
   {
     key: 'financeNews',

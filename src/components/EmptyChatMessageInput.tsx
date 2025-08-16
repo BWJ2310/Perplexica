@@ -13,6 +13,8 @@ const EmptyChatMessageInput = ({
   setFocusMode,
   optimizationMode,
   setOptimizationMode,
+  maxSources,
+  setMaxSources,
   fileIds,
   setFileIds,
   files,
@@ -23,6 +25,8 @@ const EmptyChatMessageInput = ({
   setFocusMode: (mode: string) => void;
   optimizationMode: string;
   setOptimizationMode: (mode: string) => void;
+  maxSources: number | undefined;
+  setMaxSources: (sources: number | undefined) => void;
   fileIds: string[];
   setFileIds: (fileIds: string[]) => void;
   files: File[];
@@ -84,7 +88,22 @@ const EmptyChatMessageInput = ({
         />
         <div className="flex flex-row items-center justify-between mt-4">
           <div className="flex flex-row items-center space-x-2 lg:space-x-4">
-            <Focus focusMode={focusMode} setFocusMode={setFocusMode} />
+            <div className="flex flex-row items-center space-x-2">
+              <input
+                type="number"
+                min="1"
+                max="50"
+                value={maxSources || ''}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setMaxSources(value ? parseInt(value) : undefined);
+                }}
+                placeholder="Sources"
+                className="w-20 px-2 py-1 text-xs bg-light-secondary dark:bg-dark-secondary border border-light-200 dark:border-dark-200 rounded text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-[#24A0ED]"
+                title="Number of sources to retrieve"
+              />
+              <Focus focusMode={focusMode} setFocusMode={setFocusMode} />
+            </div>
             <Attach
               fileIds={fileIds}
               setFileIds={setFileIds}

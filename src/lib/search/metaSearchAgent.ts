@@ -34,6 +34,7 @@ export interface MetaSearchAgentType {
     optimizationMode: 'speed' | 'balanced' | 'quality',
     fileIds: string[],
     systemInstructions: string,
+    maxSources?: number,
   ) => Promise<eventEmitter>;
 }
 
@@ -45,6 +46,7 @@ interface Config {
   queryGeneratorPrompt: string;
   responsePrompt: string;
   activeEngines: string[];
+  maxSources?: number;
 }
 
 type BasicChainInput = {
@@ -59,6 +61,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
   constructor(config: Config) {
     this.config = config;
   }
+
 
   private async createSearchRetrieverChain(llm: BaseChatModel) {
     (llm as unknown as ChatOpenAI).temperature = 0;
@@ -238,6 +241,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
     embeddings: Embeddings | null,
     optimizationMode: 'speed' | 'balanced' | 'quality',
     systemInstructions: string,
+    sourcesLimit: number,
   ) {
     return RunnableSequence.from([
       RunnableMap.from({
@@ -272,6 +276,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
             fileIds,
             embeddings,
             optimizationMode,
+            sourcesLimit,
           );
 
           return sortedDocs;
@@ -299,6 +304,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
     fileIds: string[],
     embeddings: Embeddings | null,
     optimizationMode: 'speed' | 'balanced' | 'quality',
+    sourcesLimit: number,
   ) {
     if (docs.length === 0 && fileIds.length === 0) {
       return docs;
@@ -329,7 +335,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
       .flat();
 
     if (query.toLocaleLowerCase() === 'summarize') {
-      return docs.slice(0, 15);
+      return docs.slice(0, sourcesLimit);
     }
 
     const docsWithContent = docs.filter(
@@ -338,7 +344,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
 
     // If no embeddings provided, skip reranking and return docs as-is
     if (!embeddings) {
-      return docsWithContent.slice(0, 15);
+      return docsWithContent.slice(0, sourcesLimit);
     }
 
     if (optimizationMode === 'speed' || this.config.rerank === false) {
@@ -371,7 +377,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
             (sim) => sim.similarity > (this.config.rerankThreshold ?? 0.3),
           )
           .sort((a, b) => b.similarity - a.similarity)
-          .slice(0, 15)
+          .slice(0, sourcesLimit)
           .map((sim) => fileDocs[sim.index]);
 
         sortedDocs =
@@ -379,10 +385,10 @@ class MetaSearchAgent implements MetaSearchAgentType {
 
         return [
           ...sortedDocs,
-          ...docsWithContent.slice(0, 15 - sortedDocs.length),
+          ...docsWithContent.slice(0, sourcesLimit - sortedDocs.length),
         ];
       } else {
-        return docsWithContent.slice(0, 15);
+        return docsWithContent.slice(0, sourcesLimit);
       }
     } else if (optimizationMode === 'balanced') {
       const [docEmbeddings, queryEmbedding] = await Promise.all([
@@ -418,7 +424,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
       const sortedDocs = similarity
         .filter((sim) => sim.similarity > (this.config.rerankThreshold ?? 0.3))
         .sort((a, b) => b.similarity - a.similarity)
-        .slice(0, 15)
+        .slice(0, this.config.maxSources || 15)
         .map((sim) => docsWithContent[sim.index]);
 
       return sortedDocs;
@@ -477,8 +483,12 @@ class MetaSearchAgent implements MetaSearchAgentType {
     optimizationMode: 'speed' | 'balanced' | 'quality',
     fileIds: string[],
     systemInstructions: string,
+    maxSources?: number,
   ) {
     const emitter = new eventEmitter();
+
+    // Use provided maxSources or fall back to config default
+    const sourcesLimit = maxSources || this.config.maxSources || 15;
 
     const answeringChain = await this.createAnsweringChain(
       llm,
@@ -486,6 +496,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
       embeddings,
       optimizationMode,
       systemInstructions,
+      sourcesLimit,
     );
 
     const stream = answeringChain.streamEvents(

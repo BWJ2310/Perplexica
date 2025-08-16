@@ -10,15 +10,7 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     rerankThreshold: 0.3,
     searchWeb: true,
     summarizer: true,
-  }),
-  marketData: new MetaSearchAgent({
-    activeEngines: ['google', 'yahoo', 'bing', 'brave'],
-    queryGeneratorPrompt: prompts.marketDataRetrieverPrompt,
-    responsePrompt: prompts.marketDataResponsePrompt,
-    rerank: true,
-    rerankThreshold: 0.2,
-    searchWeb: true,
-    summarizer: false,
+    maxSources: 10,
   }),
   academicSearch: new MetaSearchAgent({
     activeEngines: ['arxiv', 'google scholar', 'pubmed'],
@@ -28,15 +20,17 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     rerankThreshold: 0,
     searchWeb: true,
     summarizer: false,
+    maxSources: 20,
   }),
   financeNews: new MetaSearchAgent({
-    activeEngines: ['google news', 'bing news', 'yahoo news', 'brave', 'duckduckgo'],
+    activeEngines: ['google news', 'bing news', 'yahoo news', 'brave.news', 'google', 'bing', 'yahoo', 'duckduckgo', 'qwant news'],
     queryGeneratorPrompt: prompts.financeNewsRetrieverPrompt,
     responsePrompt: prompts.financeNewsResponsePrompt,
     rerank: true,
     rerankThreshold: 0.2,
     searchWeb: true,
     summarizer: true,
+    maxSources: 25,
   }),
   financeFundamentals: new MetaSearchAgent({
     activeEngines: ['google', 'bing', 'brave', 'yahoo', 'duckduckgo'],
@@ -46,15 +40,17 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     rerankThreshold: 0.3,
     searchWeb: true,
     summarizer: false,
+    maxSources: 15,
   }),
   financeSocial: new MetaSearchAgent({
-    activeEngines: ['reddit', 'google', 'bing', 'duckduckgo'],
+    activeEngines: ['reddit', 'youtube', 'google', 'bing', 'brave', 'duckduckgo', 'qwant news'],
     queryGeneratorPrompt: prompts.financeSocialRetrieverPrompt,
     responsePrompt: prompts.financeSocialResponsePrompt,
     rerank: true,
     rerankThreshold: 0.2,
     searchWeb: true,
     summarizer: false,
+    maxSources: 20,
   }),
   writingAssistant: new MetaSearchAgent({
     activeEngines: [],
@@ -64,6 +60,7 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     rerankThreshold: 0,
     searchWeb: false,
     summarizer: false,
+    maxSources: 5,
   }),
   wolframAlphaSearch: new MetaSearchAgent({
     activeEngines: ['wolframalpha'],
@@ -73,6 +70,7 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     rerankThreshold: 0,
     searchWeb: true,
     summarizer: false,
+    maxSources: 10,
   }),
   youtubeSearch: new MetaSearchAgent({
     activeEngines: ['youtube'],
@@ -82,6 +80,7 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     rerankThreshold: 0.3,
     searchWeb: true,
     summarizer: false,
+    maxSources: 15,
   }),
   redditSearch: new MetaSearchAgent({
     activeEngines: ['reddit'],
@@ -91,5 +90,6 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     rerankThreshold: 0.3,
     searchWeb: true,
     summarizer: false,
+    maxSources: 15,
   }),
 };

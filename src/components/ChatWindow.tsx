@@ -309,6 +309,7 @@ const ChatWindow = ({ id }: { id?: string }) => {
 
   const [focusMode, setFocusMode] = useState('webSearch');
   const [optimizationMode, setOptimizationMode] = useState('speed');
+  const [maxSources, setMaxSources] = useState<number | undefined>(undefined);
 
   const [isMessagesLoaded, setIsMessagesLoaded] = useState(false);
 
@@ -494,28 +495,23 @@ const ChatWindow = ({ id }: { id?: string }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        content: message,
         message: {
           messageId: messageId,
           chatId: chatId!,
           content: message,
         },
-        chatId: chatId!,
-        files: fileIds,
-        focusMode: focusMode,
         optimizationMode: optimizationMode,
+        focusMode: focusMode,
         history: rewrite
           ? chatHistory.slice(0, messageIndex === -1 ? undefined : messageIndex)
           : chatHistory,
+        files: fileIds,
         chatModel: {
           name: chatModelProvider.name,
           provider: chatModelProvider.provider,
         },
-        embeddingModel: {
-          name: embeddingModelProvider.name,
-          provider: embeddingModelProvider.provider,
-        },
-        systemInstructions: localStorage.getItem('systemInstructions'),
+        systemInstructions: localStorage.getItem('systemInstructions') || '',
+        maxSources: maxSources,
       }),
     });
 
@@ -614,6 +610,8 @@ const ChatWindow = ({ id }: { id?: string }) => {
             setFocusMode={setFocusMode}
             optimizationMode={optimizationMode}
             setOptimizationMode={setOptimizationMode}
+            maxSources={maxSources}
+            setMaxSources={setMaxSources}
             fileIds={fileIds}
             setFileIds={setFileIds}
             files={files}

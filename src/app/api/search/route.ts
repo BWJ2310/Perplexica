@@ -16,14 +16,6 @@ interface chatModel {
   baseUrl?: string;
 }
 
-interface AlpacaConfig {
-  apiKey: string;
-  apiSecret: string;
-  ticker?: string;
-  timeframe?: '1D' | '1W' | '1M' | '3M' | '6M' | '1Y';
-  paper?: boolean;
-}
-
 interface ChatRequestBody {
   optimizationMode: 'speed' | 'balanced';
   focusMode: string;
@@ -32,7 +24,7 @@ interface ChatRequestBody {
   history: Array<[string, string]>;
   stream?: boolean;
   systemInstructions?: string;
-  alpacaConfig?: AlpacaConfig;
+  maxSources?: number;
 }
 
 export const POST = async (req: Request) => {
@@ -99,7 +91,7 @@ export const POST = async (req: Request) => {
       );
     }
 
-    const searchHandler: MetaSearchAgentType = searchHandlers[body.focusMode];
+    const searchHandler = searchHandlers[body.focusMode];
 
     if (!searchHandler) {
       return Response.json({ message: 'Invalid focus mode' }, { status: 400 });
@@ -129,6 +121,7 @@ export const POST = async (req: Request) => {
       body.optimizationMode,
       [],
       body.systemInstructions || '',
+      body.maxSources,
     );
 
     if (!body.stream) {

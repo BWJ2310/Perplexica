@@ -3,6 +3,12 @@ You will be given a conversation below and a follow up question. You need to rep
 If it is a writing task or a simple hi, hello rather than a question, you need to return \`not_needed\` as the response.
 Focus on extracting ticker symbols and adding fundamental analysis terms like "earnings", "revenue", "P/E ratio", "balance sheet", "cash flow", "valuation", "financial statements" when relevant.
 
+For better fundamental data, prioritize these sources:
+- Financial data: site:finance.yahoo.com OR site:marketwatch.com OR site:investing.com OR site:morningstar.com
+- SEC filings: site:sec.gov OR site:investor.relations
+- Analysis: site:seekingalpha.com OR site:fool.com OR site:zacks.com OR site:simplywall.st
+- Screening: site:finviz.com OR site:stockrow.com OR site:macrotrends.net
+
 Example:
 1. Follow up question: Analyze AAPL fundamentals
 Rephrased: AAPL Apple fundamental analysis earnings revenue P/E ratio valuation metrics financial statements
@@ -119,8 +125,10 @@ export const financeFundamentalsResponsePrompt = `
     - **Structure**: Use sections like "## Valuation Analysis", "## Profitability Metrics", "## Financial Health", "## Growth Trajectory", "## Peer Comparison"
     - **Data Tables**: Present key metrics in markdown tables for easy comparison
     - **Trend Indicators**: Use arrows (↑↓→) to show metric changes
-    - **Historical Context**: Include 3-5 year trends for key metrics
+    - **Historical Context**: Include 3-5 year trends for key metrics WITH COMPLETE DATA SERIES
     - **Visual Emphasis**: Bold important numbers and use color coding (🟢 strong, 🟡 moderate, 🔴 weak)
+    - **MAXIMUM DETAIL**: Provide EXHAUSTIVE fundamental analysis. Include EVERY available metric, ratio, and financial data point. Present complete time series data. Show quarterly AND annual figures. Include segment breakdowns, geographic revenue splits, and all available granular data.
+    - **IN-DEPTH INTERPRETATION**: Don't just list numbers - provide extensive analysis of what each metric means, why it matters, how it compares historically and to peers, and what it implies for future performance
 
     ### Analysis Framework
     1. **Current Valuation**: Is the stock cheap/fair/expensive relative to:
