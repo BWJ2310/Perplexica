@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import Attach from './MessageInputActions/Attach';
 import CopilotToggle from './MessageInputActions/Copilot';
+import SourcesConfig from './MessageInputActions/SourcesConfig';
 import { File } from './ChatWindow';
 import AttachSmall from './MessageInputActions/AttachSmall';
 
@@ -14,6 +15,10 @@ const MessageInput = ({
   setFileIds,
   files,
   setFiles,
+  maxSources,
+  setMaxSources,
+  maxToken,
+  setMaxToken,
 }: {
   sendMessage: (message: string) => void;
   loading: boolean;
@@ -21,6 +26,10 @@ const MessageInput = ({
   setFileIds: (fileIds: string[]) => void;
   files: File[];
   setFiles: (files: File[]) => void;
+  maxSources: number | undefined;
+  setMaxSources: (sources: number | undefined) => void;
+  maxToken: number | undefined;
+  setMaxToken: (tokens: number | undefined) => void;
 }) => {
   const [copilotEnabled, setCopilotEnabled] = useState(false);
   const [message, setMessage] = useState('');
@@ -98,7 +107,13 @@ const MessageInput = ({
         placeholder="Ask a follow-up"
       />
       {mode === 'single' && (
-        <div className="flex flex-row items-center space-x-4">
+        <div className="flex flex-row items-center space-x-2">
+          <SourcesConfig
+            maxSources={maxSources}
+            setMaxSources={setMaxSources}
+            maxToken={maxToken}
+            setMaxToken={setMaxToken}
+          />
           <CopilotToggle
             copilotEnabled={copilotEnabled}
             setCopilotEnabled={setCopilotEnabled}
@@ -119,7 +134,13 @@ const MessageInput = ({
             files={files}
             setFiles={setFiles}
           />
-          <div className="flex flex-row items-center space-x-4">
+          <div className="flex flex-row items-center space-x-2">
+            <SourcesConfig
+              maxSources={maxSources}
+              setMaxSources={setMaxSources}
+              maxToken={maxToken}
+              setMaxToken={setMaxToken}
+            />
             <CopilotToggle
               copilotEnabled={copilotEnabled}
               setCopilotEnabled={setCopilotEnabled}

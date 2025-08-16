@@ -16,6 +16,10 @@ const Chat = ({
   setFileIds,
   files,
   setFiles,
+  maxSources,
+  setMaxSources,
+  maxToken,
+  setMaxToken,
 }: {
   messages: Message[];
   sendMessage: (message: string) => void;
@@ -26,6 +30,10 @@ const Chat = ({
   setFileIds: (fileIds: string[]) => void;
   files: File[];
   setFiles: (files: File[]) => void;
+  maxSources: number | undefined;
+  setMaxSources: (sources: number | undefined) => void;
+  maxToken: number | undefined;
+  setMaxToken: (tokens: number | undefined) => void;
 }) => {
   const [dividerWidth, setDividerWidth] = useState(0);
   const dividerRef = useRef<HTMLDivElement | null>(null);
@@ -99,6 +107,10 @@ const Chat = ({
             setFileIds={setFileIds}
             files={files}
             setFiles={setFiles}
+            maxSources={maxSources}
+            setMaxSources={setMaxSources}
+            maxToken={maxToken}
+            setMaxToken={setMaxToken}
           />
         </div>
       )}

@@ -39,6 +39,7 @@ type Body = {
   chatModel: ChatModel;
   systemInstructions: string;
   maxSources?: number;
+  maxToken?: number;
 };
 
 const handleEmitterEvents = async (
@@ -275,6 +276,7 @@ export const POST = async (req: Request) => {
       body.files,
       body.systemInstructions || '',
       body.maxSources,
+      body.maxToken,
     );
 
     const responseStream = new TransformStream();

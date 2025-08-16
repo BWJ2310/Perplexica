@@ -4,6 +4,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import CopilotToggle from './MessageInputActions/Copilot';
 import Focus from './MessageInputActions/Focus';
 import Optimization from './MessageInputActions/Optimization';
+import SourcesConfig from './MessageInputActions/SourcesConfig';
 import Attach from './MessageInputActions/Attach';
 import { File } from './ChatWindow';
 
@@ -15,6 +16,8 @@ const EmptyChatMessageInput = ({
   setOptimizationMode,
   maxSources,
   setMaxSources,
+  maxToken,
+  setMaxToken,
   fileIds,
   setFileIds,
   files,
@@ -27,6 +30,8 @@ const EmptyChatMessageInput = ({
   setOptimizationMode: (mode: string) => void;
   maxSources: number | undefined;
   setMaxSources: (sources: number | undefined) => void;
+  maxToken: number | undefined;
+  setMaxToken: (tokens: number | undefined) => void;
   fileIds: string[];
   setFileIds: (fileIds: string[]) => void;
   files: File[];
@@ -88,22 +93,13 @@ const EmptyChatMessageInput = ({
         />
         <div className="flex flex-row items-center justify-between mt-4">
           <div className="flex flex-row items-center space-x-2 lg:space-x-4">
-            <div className="flex flex-row items-center space-x-2">
-              <input
-                type="number"
-                min="1"
-                max="50"
-                value={maxSources || ''}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setMaxSources(value ? parseInt(value) : undefined);
-                }}
-                placeholder="Sources"
-                className="w-20 px-2 py-1 text-xs bg-light-secondary dark:bg-dark-secondary border border-light-200 dark:border-dark-200 rounded text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-[#24A0ED]"
-                title="Number of sources to retrieve"
-              />
-              <Focus focusMode={focusMode} setFocusMode={setFocusMode} />
-            </div>
+            <SourcesConfig
+              maxSources={maxSources}
+              setMaxSources={setMaxSources}
+              maxToken={maxToken}
+              setMaxToken={setMaxToken}
+            />
+            <Focus focusMode={focusMode} setFocusMode={setFocusMode} />
             <Attach
               fileIds={fileIds}
               setFileIds={setFileIds}

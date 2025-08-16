@@ -35,6 +35,7 @@ export interface MetaSearchAgentType {
     fileIds: string[],
     systemInstructions: string,
     maxSources?: number,
+    maxToken?: number,
   ) => Promise<eventEmitter>;
 }
 
@@ -242,7 +243,12 @@ class MetaSearchAgent implements MetaSearchAgentType {
     optimizationMode: 'speed' | 'balanced' | 'quality',
     systemInstructions: string,
     sourcesLimit: number,
+    maxToken?: number,
   ) {
+    // Configure max tokens if provided
+    if (maxToken && (llm as any).maxTokens !== undefined) {
+      (llm as any).maxTokens = maxToken;
+    }
     return RunnableSequence.from([
       RunnableMap.from({
         systemInstructions: () => systemInstructions,
@@ -484,6 +490,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
     fileIds: string[],
     systemInstructions: string,
     maxSources?: number,
+    maxToken?: number,
   ) {
     const emitter = new eventEmitter();
 
@@ -497,6 +504,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
       optimizationMode,
       systemInstructions,
       sourcesLimit,
+      maxToken,
     );
 
     const stream = answeringChain.streamEvents(

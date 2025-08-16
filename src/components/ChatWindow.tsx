@@ -310,6 +310,7 @@ const ChatWindow = ({ id }: { id?: string }) => {
   const [focusMode, setFocusMode] = useState('webSearch');
   const [optimizationMode, setOptimizationMode] = useState('speed');
   const [maxSources, setMaxSources] = useState<number | undefined>(undefined);
+  const [maxToken, setMaxToken] = useState<number | undefined>(undefined);
 
   const [isMessagesLoaded, setIsMessagesLoaded] = useState(false);
 
@@ -512,6 +513,7 @@ const ChatWindow = ({ id }: { id?: string }) => {
         },
         systemInstructions: localStorage.getItem('systemInstructions') || '',
         maxSources: maxSources,
+        maxToken: maxToken,
       }),
     });
 
@@ -601,6 +603,10 @@ const ChatWindow = ({ id }: { id?: string }) => {
               setFileIds={setFileIds}
               files={files}
               setFiles={setFiles}
+              maxSources={maxSources}
+              setMaxSources={setMaxSources}
+              maxToken={maxToken}
+              setMaxToken={setMaxToken}
             />
           </>
         ) : (
@@ -612,6 +618,8 @@ const ChatWindow = ({ id }: { id?: string }) => {
             setOptimizationMode={setOptimizationMode}
             maxSources={maxSources}
             setMaxSources={setMaxSources}
+            maxToken={maxToken}
+            setMaxToken={setMaxToken}
             fileIds={fileIds}
             setFileIds={setFileIds}
             files={files}

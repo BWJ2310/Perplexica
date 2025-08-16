@@ -13,6 +13,8 @@ const EmptyChat = ({
   setOptimizationMode,
   maxSources,
   setMaxSources,
+  maxToken,
+  setMaxToken,
   fileIds,
   setFileIds,
   files,
@@ -25,6 +27,8 @@ const EmptyChat = ({
   setOptimizationMode: (mode: string) => void;
   maxSources: number | undefined;
   setMaxSources: (sources: number | undefined) => void;
+  maxToken: number | undefined;
+  setMaxToken: (tokens: number | undefined) => void;
   fileIds: string[];
   setFileIds: (fileIds: string[]) => void;
   files: File[];
@@ -50,6 +54,8 @@ const EmptyChat = ({
             setOptimizationMode={setOptimizationMode}
             maxSources={maxSources}
             setMaxSources={setMaxSources}
+            maxToken={maxToken}
+            setMaxToken={setMaxToken}
             fileIds={fileIds}
             setFileIds={setFileIds}
             files={files}
