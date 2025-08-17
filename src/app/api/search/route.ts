@@ -29,6 +29,34 @@ interface ChatRequestBody {
 
 export const POST = async (req: Request) => {
   try {
+    // Log request origin (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      const origin = req.headers.get('origin') || 'unknown';
+      const userAgent = req.headers.get('user-agent') || 'unknown';
+      const referer = req.headers.get('referer') || 'none';
+      const forwardedFor = req.headers.get('x-forwarded-for');
+      const realIp = req.headers.get('x-real-ip');
+      const ip = forwardedFor || realIp || 'unknown';
+      
+      console.log('=== Incoming Search Request ===');
+      console.log('Origin:', origin);
+      console.log('Referer:', referer);
+      console.log('IP:', ip);
+      console.log('User-Agent:', userAgent);
+      console.log('Timestamp:', new Date().toISOString());
+      
+      const body: ChatRequestBody = await req.json();
+      
+      console.log('Focus Mode:', body.focusMode);
+      console.log('Query:', body.query);
+      console.log('Optimization:', body.optimizationMode || 'balanced');
+      console.log('Custom AI:', body.chatModel ? `${body.chatModel.provider}/${body.chatModel.model}` : 'default');
+      console.log('================================');
+      
+      // Re-parse body since we already consumed it
+      req = new Request(req, { body: JSON.stringify(body) });
+    }
+    
     const body: ChatRequestBody = await req.json();
 
     if (!body.focusMode || !body.query) {
