@@ -24,19 +24,19 @@ const focusModes = [
     icon: <Globe size={20} />,
   },
   {
-    key: 'financeNews',
+    key: 'news',
     title: 'News',
     description: 'Market news and events',
     icon: <TrendingUp size={20} />,
   },
   {
-    key: 'financeFundamentals',
+    key: 'fundamentals',
     title: 'Fundamentals',
     description: 'Company metrics and analysis',
     icon: <LineChart size={20} />,
   },
   {
-    key: 'financeSocial',
+    key: 'social',
     title: 'Social',
     description: 'Social media sentiment',
     icon: <Users size={20} />,

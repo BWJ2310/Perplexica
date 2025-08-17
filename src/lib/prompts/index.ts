@@ -1,33 +1,33 @@
 import {
-  financeNewsResponsePrompt,
-  financeNewsRetrieverPrompt,
-} from './financeNews';
+  newsResponsePrompt,
+  newsRetrieverPrompt,
+} from './news';
 import {
-  financeFundamentalsResponsePrompt,
-  financeFundamentalsRetrieverPrompt,
-} from './financeFundamentals';
+  fundamentalsResponsePrompt,
+  fundamentalsRetrieverPrompt,
+} from './fundamentals';
 import {
-  financeSocialResponsePrompt,
-  financeSocialRetrieverPrompt,
-} from './financeSocial';
+  socialResponsePrompt,
+  socialRetrieverPrompt,
+} from './social';
 import { webSearchResponsePrompt, webSearchRetrieverPrompt } from './webSearch';
 import { writingAssistantPrompt } from './writingAssistant';
 
 export default {
   webSearchResponsePrompt,
   webSearchRetrieverPrompt,
-  financeNewsResponsePrompt,
-  financeNewsRetrieverPrompt,
-  financeFundamentalsResponsePrompt,
-  financeFundamentalsRetrieverPrompt,
-  financeSocialResponsePrompt,
-  financeSocialRetrieverPrompt,
+  newsResponsePrompt,
+  newsRetrieverPrompt,
+  fundamentalsResponsePrompt,
+  fundamentalsRetrieverPrompt,
+  socialResponsePrompt,
+  socialRetrieverPrompt,
   writingAssistantPrompt,
   // Keep these for backward compatibility but they will use finance-optimized prompts
   academicSearchResponsePrompt: webSearchResponsePrompt,
   academicSearchRetrieverPrompt: webSearchRetrieverPrompt,
-  redditSearchResponsePrompt: financeSocialResponsePrompt,
-  redditSearchRetrieverPrompt: financeSocialRetrieverPrompt,
+  redditSearchResponsePrompt: socialResponsePrompt,
+  redditSearchRetrieverPrompt: socialRetrieverPrompt,
   wolframAlphaSearchResponsePrompt: webSearchResponsePrompt,
   wolframAlphaSearchRetrieverPrompt: webSearchRetrieverPrompt,
   youtubeSearchResponsePrompt: webSearchResponsePrompt,

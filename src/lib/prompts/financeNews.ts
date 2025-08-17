@@ -1,4 +1,4 @@
-export const financeNewsRetrieverPrompt = `
+export const newsRetrieverPrompt = `
 You will be given a conversation below and a follow up question. You need to rephrase the follow-up question if needed so it is a standalone question that can be used by the LLM to search for financial news, market sentiment, and recent developments from global sources.
 If it is a writing task or a simple hi, hello rather than a question, you need to return \`not_needed\` inside the \`<question>\` XML tags.
 Focus on extracting ticker symbols, company names, and adding terms like "news", "sentiment", "analyst opinion", "market reaction" when relevant.
@@ -59,7 +59,7 @@ Follow up question: {query}
 Rephrased question:
 `;
 
-export const financeNewsResponsePrompt = `
+export const newsResponsePrompt = `
    You are Perplexica, an AI model specialized in retrieving and organizing global financial news, international market updates, and breaking developments worldwide. You are currently set on focus mode 'Finance News', this means you will be gathering news data from global sources without providing investment advice or predictions.
 
     Your task is to provide answers that are:

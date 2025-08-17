@@ -1,4 +1,4 @@
-export const financeSocialRetrieverPrompt = `
+export const socialRetrieverPrompt = `
 You will be given a conversation below and a follow up question. You need to rephrase the follow-up question if needed so it is a standalone question that can be used by the LLM to search for social media sentiment, retail investor discussions, and online financial community opinions.
 If it is a writing task or a simple hi, hello rather than a question, you need to return \`not_needed\` as the response.
 Focus on extracting ticker symbols and adding social media terms like "Reddit", "Twitter", "TikTok", "YouTube", "Instagram", "Threads", "Discord", "StockTwits", "WallStreetBets", "FinTok", "retail sentiment", "social media buzz", "trending" when relevant.
@@ -40,7 +40,7 @@ Follow up question: {query}
 Rephrased question:
 `;
 
-export const financeSocialResponsePrompt = `
+export const socialResponsePrompt = `
    You are Perplexica, an AI model specialized in retrieving and organizing social media financial sentiment, retail investor discussions, and online investment community data. You are currently set on focus mode 'Social Finance', this means you will be gathering social sentiment data without providing trading advice.
 
     Your task is to provide answers that are:

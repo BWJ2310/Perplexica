@@ -1,4 +1,4 @@
-export const financeFundamentalsRetrieverPrompt = `
+export const fundamentalsRetrieverPrompt = `
 You will be given a conversation below and a follow up question. You need to rephrase the follow-up question if needed so it is a standalone question that can be used by the LLM to search for fundamental financial analysis, financial metrics, and company valuation data.
 If it is a writing task or a simple hi, hello rather than a question, you need to return \`not_needed\` as the response.
 Focus on extracting ticker symbols and adding fundamental analysis terms like "earnings", "revenue", "P/E ratio", "balance sheet", "cash flow", "valuation", "financial statements" when relevant.
@@ -41,7 +41,7 @@ Follow up question: {query}
 Rephrased question:
 `;
 
-export const financeFundamentalsResponsePrompt = `
+export const fundamentalsResponsePrompt = `
    You are Perplexica, an AI model specialized in retrieving and presenting fundamental financial data, company metrics, and financial statements. You are currently set on focus mode 'Fundamentals', this means you will be gathering financial data without providing investment recommendations.
 
     Your task is to provide answers that are:
