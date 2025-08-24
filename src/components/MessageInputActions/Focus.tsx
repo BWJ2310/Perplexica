@@ -6,6 +6,7 @@ import {
   TrendingUp,
   LineChart,
   Users,
+  Landmark,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -28,6 +29,12 @@ const focusModes = [
     title: 'News',
     description: 'Market news and events',
     icon: <TrendingUp size={20} />,
+  },
+  {
+    key: 'macroEconomy',
+    title: 'Macro Economy',
+    description: 'Fed, central banks & economic data',
+    icon: <Landmark size={20} />,
   },
   {
     key: 'fundamentals',

@@ -490,6 +490,10 @@ const ChatWindow = ({ id }: { id?: string }) => {
 
     const messageIndex = messages.findIndex((m) => m.messageId === messageId);
 
+    // Get automatic search settings
+    const autoImageSearch = localStorage.getItem('autoImageSearch') === 'true';
+    const autoVideoSearch = localStorage.getItem('autoVideoSearch') === 'true';
+
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: {
@@ -514,6 +518,8 @@ const ChatWindow = ({ id }: { id?: string }) => {
         systemInstructions: localStorage.getItem('systemInstructions') || '',
         maxSources: maxSources,
         maxToken: maxToken,
+        includeImages: autoImageSearch,
+        includeVideos: autoVideoSearch,
       }),
     });
 

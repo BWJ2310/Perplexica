@@ -36,6 +36,8 @@ export interface MetaSearchAgentType {
     systemInstructions: string,
     maxSources?: number,
     maxToken?: number,
+    includeImages?: boolean,
+    includeVideos?: boolean,
   ) => Promise<eventEmitter>;
 }
 
@@ -64,7 +66,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
   }
 
 
-  private async createSearchRetrieverChain(llm: BaseChatModel) {
+  private async createSearchRetrieverChain(llm: BaseChatModel, optimizationMode: 'speed' | 'balanced' | 'quality' = 'balanced', includeImages?: boolean, includeVideos?: boolean) {
     (llm as unknown as ChatOpenAI).temperature = 0;
 
     return RunnableSequence.from([
@@ -209,26 +211,52 @@ class MetaSearchAgent implements MetaSearchAgentType {
         } else {
           question = question.replace(/<think>.*?<\/think>/g, '');
 
+          // Filter out YouTube and image searches for speed/balanced modes unless explicitly included
+          let filteredEngines = this.config.activeEngines;
+          if (optimizationMode === 'balanced' || optimizationMode === 'speed') {
+            filteredEngines = this.config.activeEngines.filter(engine => {
+              const engineLower = engine.toLowerCase();
+              // Filter out YouTube if not explicitly included
+              if (!includeVideos && engineLower === 'youtube') {
+                return false;
+              }
+              // Filter out image searches if not explicitly included
+              if (!includeImages && ['google images', 'bing images', 'qwant images', 'unsplash'].includes(engineLower)) {
+                return false;
+              }
+              return true;
+            });
+          }
+
           const res = await searchSearxng(question, {
             language: 'en',
-            engines: this.config.activeEngines,
+            engines: filteredEngines,
           });
 
-          const documents = res.results.map(
-            (result) =>
-              new Document({
-                pageContent:
-                  result.content ||
-                  (this.config.activeEngines.includes('youtube')
-                    ? result.title
-                    : '') /* Todo: Implement transcript grabbing using Youtubei (source: https://www.npmjs.com/package/youtubei) */,
-                metadata: {
-                  title: result.title,
-                  url: result.url,
-                  ...(result.img_src && { img_src: result.img_src }),
-                },
-              }),
-          );
+          const documents = res.results
+            .filter((result) => {
+              // Filter out YouTube results in speed/balanced modes unless explicitly included
+              if ((optimizationMode === 'balanced' || optimizationMode === 'speed') && !includeVideos &&
+                  (result.url.includes('youtube.com') || result.url.includes('youtu.be'))) {
+                return false;
+              }
+              return true;
+            })
+            .map(
+              (result) =>
+                new Document({
+                  pageContent:
+                    result.content ||
+                    (filteredEngines.includes('youtube')
+                      ? result.title
+                      : '') /* Todo: Implement transcript grabbing using Youtubei (source: https://www.npmjs.com/package/youtubei) */,
+                  metadata: {
+                    title: result.title,
+                    url: result.url,
+                    ...(result.img_src && (optimizationMode === 'quality' || includeImages === true) && { img_src: result.img_src }),
+                  },
+                }),
+            );
 
           return { query: question, docs: documents };
         }
@@ -244,6 +272,8 @@ class MetaSearchAgent implements MetaSearchAgentType {
     systemInstructions: string,
     sourcesLimit: number,
     maxToken?: number,
+    includeImages?: boolean,
+    includeVideos?: boolean,
   ) {
     // Configure max tokens if provided
     if (maxToken && (llm as any).maxTokens !== undefined) {
@@ -265,7 +295,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
 
           if (this.config.searchWeb) {
             const searchRetrieverChain =
-              await this.createSearchRetrieverChain(llm);
+              await this.createSearchRetrieverChain(llm, optimizationMode, includeImages, includeVideos);
 
             const searchRetrieverResult = await searchRetrieverChain.invoke({
               chat_history: processedHistory,
@@ -491,6 +521,8 @@ class MetaSearchAgent implements MetaSearchAgentType {
     systemInstructions: string,
     maxSources?: number,
     maxToken?: number,
+    includeImages?: boolean,
+    includeVideos?: boolean,
   ) {
     const emitter = new eventEmitter();
 
@@ -505,6 +537,8 @@ class MetaSearchAgent implements MetaSearchAgentType {
       systemInstructions,
       sourcesLimit,
       maxToken,
+      includeImages,
+      includeVideos,
     );
 
     const stream = answeringChain.streamEvents(

@@ -40,6 +40,8 @@ type Body = {
   systemInstructions: string;
   maxSources?: number;
   maxToken?: number;
+  includeImages?: boolean;
+  includeVideos?: boolean;
 };
 
 const handleEmitterEvents = async (
@@ -277,6 +279,8 @@ export const POST = async (req: Request) => {
       body.systemInstructions || '',
       body.maxSources,
       body.maxToken,
+      body.includeImages,
+      body.includeVideos,
     );
 
     const responseStream = new TransformStream();

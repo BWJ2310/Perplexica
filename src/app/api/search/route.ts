@@ -25,6 +25,8 @@ interface ChatRequestBody {
   stream?: boolean;
   systemInstructions?: string;
   maxSources?: number;
+  includeImages?: boolean;
+  includeVideos?: boolean;
 }
 
 export const POST = async (req: Request) => {
@@ -150,6 +152,9 @@ export const POST = async (req: Request) => {
       [],
       body.systemInstructions || '',
       body.maxSources,
+      undefined,
+      body.includeImages,
+      body.includeVideos,
     );
 
     if (!body.stream) {
