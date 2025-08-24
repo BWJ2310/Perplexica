@@ -12,6 +12,10 @@ import {
 } from './social';
 import { webSearchResponsePrompt, webSearchRetrieverPrompt } from './webSearch';
 import { writingAssistantPrompt } from './writingAssistant';
+import {
+  macroEconomyResponsePrompt,
+  macroEconomyRetrieverPrompt,
+} from './macroEconomy';
 
 export default {
   webSearchResponsePrompt,
@@ -23,6 +27,8 @@ export default {
   socialResponsePrompt,
   socialRetrieverPrompt,
   writingAssistantPrompt,
+  macroEconomyResponsePrompt,
+  macroEconomyRetrieverPrompt,
   // Keep these for backward compatibility but they will use finance-optimized prompts
   academicSearchResponsePrompt: webSearchResponsePrompt,
   academicSearchRetrieverPrompt: webSearchRetrieverPrompt,

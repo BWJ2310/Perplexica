@@ -32,6 +32,16 @@ export const searchHandlers: Record<string, MetaSearchAgent> = {
     summarizer: true,
     maxSources: 25,
   }),
+  macroEconomy: new MetaSearchAgent({
+    activeEngines: ['google', 'bing', 'brave', 'duckduckgo', 'google news'],
+    queryGeneratorPrompt: prompts.macroEconomyRetrieverPrompt,
+    responsePrompt: prompts.macroEconomyResponsePrompt,
+    rerank: true,
+    rerankThreshold: 0.2,
+    searchWeb: true,
+    summarizer: true,
+    maxSources: 20,
+  }),
   fundamentals: new MetaSearchAgent({
     activeEngines: ['google', 'bing', 'brave', 'yahoo', 'duckduckgo'],
     queryGeneratorPrompt: prompts.fundamentalsRetrieverPrompt,
