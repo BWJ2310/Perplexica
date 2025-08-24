@@ -35,7 +35,7 @@ export const loadDeepseekChatModels = async () => {
           modelName: model.key,
           temperature: 0.7,
           configuration: {
-            baseURL: 'https://api.deepseek.com',
+            baseURL: 'https://api.deepseek.com/v1',
           },
         }) as unknown as BaseChatModel,
       };
