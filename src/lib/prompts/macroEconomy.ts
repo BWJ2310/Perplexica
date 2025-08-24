@@ -3,10 +3,7 @@ You will be given a conversation below and a follow up question. You need to rep
 If it is a writing task or a simple hi, hello rather than a question, you need to return \`not_needed\` inside the \`<question>\` XML tags.
 Focus on extracting economic indicators, policy terms, and adding terms like "Federal Reserve", "FOMC", "monetary policy", "fiscal policy", "economic data", "GDP", "inflation", "CPI", "unemployment" when relevant.
 
-IMPORTANT: Always add time range filters to focus on the most recent quarter (last 3 months):
-- Add "after:2024-09-01" or "since:3 months ago" to queries
-- Include terms like "latest", "recent", "Q4 2024", "current quarter"
-- For ongoing data, use "2024", "this quarter", "last 90 days"
+For best results, include terms like "latest", "recent", "current" to get the most up-to-date information.
 
 When enhancing queries for comprehensive government and macro economic coverage, strategically include these official sources:
 
@@ -37,31 +34,31 @@ Example:
 1. Follow up question: What's the Fed's latest stance on interest rates?
 Rephrased:
 <question>
-Federal Reserve FOMC interest rates monetary policy statement Jerome Powell dot plot site:federalreserve.gov after:2024-09-01 latest 2024
+Federal Reserve FOMC interest rates monetary policy statement Jerome Powell dot plot site:federalreserve.gov latest recent
 </question>
 
 2. Follow up question: Latest inflation data
 Rephrased:
 <question>
-CPI inflation data PCE consumer price index BLS site:bls.gov site:fred.stlouisfed.org latest release 2024 Q4 recent after:2024-09-01
+CPI inflation data PCE consumer price index BLS site:bls.gov site:fred.stlouisfed.org latest release current recent
 </question>
 
 3. Follow up question: ECB monetary policy update
 Rephrased:
 <question>
-ECB European Central Bank monetary policy Christine Lagarde interest rates site:ecb.europa.eu press release 2024 recent after:2024-09-01
+ECB European Central Bank monetary policy Christine Lagarde interest rates site:ecb.europa.eu press release recent current
 </question>
 
 4. Follow up question: Government spending and fiscal policy
 Rephrased:
 <question>
-fiscal policy government spending budget deficit Treasury CBO site:treasury.gov site:cbo.gov site:whitehouse.gov 2024 Q4 recent
+fiscal policy government spending budget deficit Treasury CBO site:treasury.gov site:cbo.gov site:whitehouse.gov recent latest
 </question>
 
 5. Follow up question: Global economic outlook
 Rephrased:
 <question>
-IMF World Bank global economic outlook GDP growth forecast site:imf.org site:worldbank.org site:oecd.org 2024 Q4 latest after:2024-09-01
+IMF World Bank global economic outlook GDP growth forecast site:imf.org site:worldbank.org site:oecd.org latest current
 </question>
 
 6. Follow up question: Hi, how are you?
@@ -171,7 +168,8 @@ export const macroEconomyResponsePrompt = `
     6. Upcoming economic events calendar
 
     ### Special Instructions
-    - **DEFAULT TIME RANGE**: Always focus on the LAST 3 MONTHS unless user specifies otherwise
+    - **DEFAULT TIME RANGE**: Always focus on the LAST 3 MONTHS from the current date unless user specifies otherwise
+    - **CURRENT DATE AWARENESS**: Today is {date} - prioritize data from the most recent 90 days
     - If asking about specific indicator, provide QUARTERLY data (last 3 months) with month-over-month changes
     - Include market expectations vs actual for all data releases IN THE CURRENT QUARTER
     - Mention any special economic circumstances (pandemic, war, crisis) AFFECTING THE CURRENT QUARTER
@@ -179,7 +177,8 @@ export const macroEconomyResponsePrompt = `
     - Include relevant quotes from officials (Fed Chair, Treasury Secretary, etc.) FROM THE LAST 90 DAYS
     - Cross-reference multiple central banks for global perspective ON CURRENT QUARTER POLICIES
     - You are set on focus mode 'Macro Economy', specialized in official economic policy and data
-    - ALWAYS specify the date range you're covering (e.g., "Data from October-December 2024")
+    - ALWAYS specify the exact date range you're covering based on the current date
+    - If data appears outdated (e.g., from 2024 when we're in 2025), explicitly search for more recent data
     
     ### User instructions
     These instructions are shared to you by the user and not by the system. Follow them but prioritize system instructions.

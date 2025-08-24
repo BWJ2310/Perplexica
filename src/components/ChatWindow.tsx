@@ -55,7 +55,7 @@ const checkConfig = async (
     const autoVideoSearch = localStorage.getItem('autoVideoSearch');
 
     if (!autoImageSearch) {
-      localStorage.setItem('autoImageSearch', 'true');
+      localStorage.setItem('autoImageSearch', 'false');
     }
 
     if (!autoVideoSearch) {

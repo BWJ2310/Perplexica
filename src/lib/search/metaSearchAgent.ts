@@ -216,12 +216,12 @@ class MetaSearchAgent implements MetaSearchAgentType {
           if (optimizationMode === 'balanced' || optimizationMode === 'speed') {
             filteredEngines = this.config.activeEngines.filter(engine => {
               const engineLower = engine.toLowerCase();
-              // Filter out YouTube if not explicitly included
-              if (!includeVideos && engineLower === 'youtube') {
+              // Filter out YouTube unless explicitly included (includeVideos === true)
+              if (includeVideos !== true && engineLower === 'youtube') {
                 return false;
               }
-              // Filter out image searches if not explicitly included
-              if (!includeImages && ['google images', 'bing images', 'qwant images', 'unsplash'].includes(engineLower)) {
+              // Filter out image searches unless explicitly included (includeImages === true)
+              if (includeImages !== true && ['google images', 'bing images', 'qwant images', 'unsplash'].includes(engineLower)) {
                 return false;
               }
               return true;
@@ -236,7 +236,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
           const documents = res.results
             .filter((result) => {
               // Filter out YouTube results in speed/balanced modes unless explicitly included
-              if ((optimizationMode === 'balanced' || optimizationMode === 'speed') && !includeVideos &&
+              if ((optimizationMode === 'balanced' || optimizationMode === 'speed') && includeVideos !== true &&
                   (result.url.includes('youtube.com') || result.url.includes('youtu.be'))) {
                 return false;
               }
@@ -427,13 +427,22 @@ class MetaSearchAgent implements MetaSearchAgentType {
         return docsWithContent.slice(0, sourcesLimit);
       }
     } else if (optimizationMode === 'balanced') {
-      const [docEmbeddings, queryEmbedding] = await Promise.all([
-        embeddings.embedDocuments(
-          docsWithContent.map((doc) => doc.pageContent),
-        ),
-        embeddings.embedQuery(query),
-      ]);
+      // If there are no documents to rerank and no files, return empty array
+      if (docsWithContent.length === 0 && filesData.length === 0) {
+        return [];
+      }
 
+      // Only embed documents if there are any
+      let docEmbeddings: number[][] = [];
+      if (docsWithContent.length > 0) {
+        docEmbeddings = await embeddings.embedDocuments(
+          docsWithContent.map((doc) => doc.pageContent),
+        );
+      }
+
+      const queryEmbedding = await embeddings.embedQuery(query);
+
+      // Add file data to documents
       docsWithContent.push(
         ...filesData.map((fileData) => {
           return new Document({
@@ -447,6 +456,11 @@ class MetaSearchAgent implements MetaSearchAgentType {
       );
 
       docEmbeddings.push(...filesData.map((fileData) => fileData.embeddings));
+
+      // If still no documents after adding files, return empty
+      if (docEmbeddings.length === 0) {
+        return [];
+      }
 
       const similarity = docEmbeddings.map((docEmbedding, i) => {
         const sim = computeSimilarity(queryEmbedding, docEmbedding);
