@@ -278,7 +278,7 @@ export const POST = async (req: Request) => {
       body.files,
       body.systemInstructions || '',
       body.maxSources,
-      body.maxToken,
+      body.maxToken || 4000,
       body.includeImages,
       body.includeVideos,
     );
