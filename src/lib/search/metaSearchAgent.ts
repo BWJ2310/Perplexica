@@ -66,8 +66,12 @@ class MetaSearchAgent implements MetaSearchAgentType {
   }
 
 
-  private async createSearchRetrieverChain(llm: BaseChatModel, optimizationMode: 'speed' | 'balanced' | 'quality' = 'balanced', includeImages?: boolean, includeVideos?: boolean) {
+  private async createSearchRetrieverChain(llm: BaseChatModel, optimizationMode: 'speed' | 'balanced' | 'quality' = 'balanced', includeImages?: boolean, includeVideos?: boolean, maxToken?: number) {
     (llm as unknown as ChatOpenAI).temperature = 0;
+    // Apply maxToken limit if provided
+    if (maxToken) {
+      (llm as any).maxTokens = maxToken;
+    }
 
     return RunnableSequence.from([
       PromptTemplate.fromTemplate(this.config.queryGeneratorPrompt),
@@ -276,7 +280,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
     includeVideos?: boolean,
   ) {
     // Configure max tokens if provided
-    if (maxToken && (llm as any).maxTokens !== undefined) {
+    if (maxToken) {
       (llm as any).maxTokens = maxToken;
     }
     return RunnableSequence.from([
@@ -295,7 +299,7 @@ class MetaSearchAgent implements MetaSearchAgentType {
 
           if (this.config.searchWeb) {
             const searchRetrieverChain =
-              await this.createSearchRetrieverChain(llm, optimizationMode, includeImages, includeVideos);
+              await this.createSearchRetrieverChain(llm, optimizationMode, includeImages, includeVideos, maxToken);
 
             const searchRetrieverResult = await searchRetrieverChain.invoke({
               chat_history: processedHistory,

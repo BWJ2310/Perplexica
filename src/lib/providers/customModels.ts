@@ -75,6 +75,7 @@ export function createCustomModel(config: CustomModelConfig): BaseChatModel {
       apiKey: apiKey,
       modelName: model,
       temperature: temperature,
+      maxTokens: 4000, // Default max tokens to prevent credit issues
       configuration: {
         baseURL: baseUrl || PROVIDER_BASE_URLS.openrouter,
         defaultHeaders: {
